@@ -6,6 +6,8 @@ This deployment uses a UBI9 image defined in `Containerfile` and accessible at `
 
 ## Installation
 
+`kustomize build components/llm-servers/ollama/gitops/overlays`
+
 The default installation deploys the [Mistral-7B-Instruct-v0.2](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2) model, of course in its quantized Ollama version. See [Advanced installation](#advanced-installation) for instructions on how to change the model as well as various settings.
 
 Automated Deployment:

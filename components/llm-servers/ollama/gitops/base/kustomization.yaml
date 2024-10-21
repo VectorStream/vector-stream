@@ -4,9 +4,10 @@ kind: Kustomization
 
 resources:
 # wave 0
-- pvc.yaml 
+- namespace.yaml
 # wave 1
+- pvc.yaml 
+# wave 2
 - deployment.yaml
 - service.yaml
-- route.yaml
-# wave 2
+#- route.yaml
