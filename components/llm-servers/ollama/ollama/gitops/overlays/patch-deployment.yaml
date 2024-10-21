@@ -1,0 +1,24 @@
+# ollama-deployment/overlays/multiple-models/patch-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama
+spec:
+  template:
+    spec:
+      containers:
+      - name: ollama
+        env:
+        - name: MODEL_IDS
+          value: "mistral:latest,granite3-dense:8b,llama3.2"  # Add your desired models here
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - |
+                IFS=',' read -ra MODELS <<< "$MODEL_IDS"
+                for MODEL in "${MODELS[@]}"; do
+                  /bin/ollama pull "$MODEL"
+                done

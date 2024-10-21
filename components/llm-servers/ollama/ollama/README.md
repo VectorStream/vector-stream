@@ -4,8 +4,6 @@ Example deployment of the [Ollama](https://github.com/ollama/ollama) server for 
 
 This deployment uses a UBI9 image defined in `Containerfile` and accessible at `quay.io/rh-aiservices-bu/ollama-ubi9` (check for the latest version available). The image is compiled for the **avx2** instruction set (so all Intel and AMD processors post-2016). However this image **does not support GPU acceleration** to reduce its size. It is meant to be used as a simple LLM server for tests when you don't have access to GPUs.
 
-A notebook example using Langchain is available [here](../../examples/notebooks/langchain/Langchain-vLLM-Prompt-memory.ipynb).
-
 ## Installation
 
 The default installation deploys the [Mistral-7B-Instruct-v0.2](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2) model, of course in its quantized Ollama version. See [Advanced installation](#advanced-installation) for instructions on how to change the model as well as various settings.
