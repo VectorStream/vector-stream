@@ -1,4 +1,3 @@
-# ollama-deployment/overlays/multiple-models/kustomization.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
@@ -8,4 +7,3 @@ resources:
   - ../base
 patches:
   - patch-deployment.yaml
-
