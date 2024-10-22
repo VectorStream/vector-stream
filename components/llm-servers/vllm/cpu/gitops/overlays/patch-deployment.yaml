@@ -1,7 +1,7 @@
 ---
 apiVersion: apps/v1
 kind: Deployment
-meta
+  meta
   name: vllm
 spec:
   template:
