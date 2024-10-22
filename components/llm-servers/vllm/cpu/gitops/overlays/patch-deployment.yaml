@@ -10,7 +10,7 @@ spec:
       - name: server
         args:
         - "--model"
-        - "BigCode/micro-HiPPO-v2.4.2b-315M"
+        - "nvidia/Llama-3.1-Nemotron-70B-Instruct"
         - "--download-dir"
         - "/models-cache"
         - "--dtype"
