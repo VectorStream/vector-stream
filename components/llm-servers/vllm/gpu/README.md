@@ -10,7 +10,7 @@ A notebook example using Langchain is available [here](../../examples/notebooks/
 
 ## Installation
 
-`kustomize build components/llm-servers/vllm/cpu/gitops/overlays`
+`kustomize build components/llm-servers/vllm/gpu/gitops/overlays`
 
 The default installation deploys the [Mistral-7B-Instruct-v0.2](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2) model. Although on the smaller side of LLMs, it will still require a GPU to work properly in a fast enough manner. See [Advanced installation](#advanced-installation) for instructions on how to change the model as well as various settings.
 

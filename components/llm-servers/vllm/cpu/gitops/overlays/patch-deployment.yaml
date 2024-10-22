@@ -1,17 +1,19 @@
----
+# patch-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
-  meta
+metadata:
   name: vllm
 spec:
   template:
     spec:
       containers:
-        - name: model-server
-          resources:
-            limits:
-              cpu: 10
-              memory: 20Gi
-            requests:
-              cpu: 10
-              memory: 20Gi
+      - name: server
+        args:
+        - "--model"
+        - "BigCode/micro-HiPPO-v2.4.2b-315M"
+        - "--download-dir"
+        - "/models-cache"
+        - "--dtype"
+        - "float16"
+        - "--max-model-len"
+        - "2048"
