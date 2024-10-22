@@ -10,7 +10,7 @@ spec:
       - name: ollama
         env:
         - name: MODEL_IDS
-          value: "mistral:latest,granite3-dense:8b,llama3.2"  # Add your desired models here
+          value: "mistral:latest,granite3-dense:8b,llama3.1"  # Add your desired models here
         lifecycle:
           postStart:
             exec:
