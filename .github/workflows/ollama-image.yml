@@ -16,12 +16,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Get latest Ollama release version
         id: get_version
@@ -32,7 +32,7 @@ jobs:
       - name: Check if image already exists
         id: check_image
         run: |
-          IMAGE_EXISTS=$(curl -s "https://quay.io/api/v1/repository/${{ secrets.QUAY_USERNAME }}/ollama/tag/?specificTag=${{ steps.get_version.outputs.OLLAMA_VERSION }}" | jq -r '.tags | length')
+          IMAGE_EXISTS=$(curl -s "https://quay.io/api/v1/repository/takinosh/ollama-ubi9/tag/?specificTag=${{ steps.get_version.outputs.OLLAMA_VERSION }}" | jq -r '.tags | length')
           if [ "$IMAGE_EXISTS" -gt 0 ]; then
             echo "::set-output name=image_exists::true"
           else
@@ -61,7 +61,7 @@ jobs:
 
       - name: Log in to Quay.io
         if: steps.check_image.outputs.image_exists == 'false'
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: quay.io
           username: ${{ secrets.QUAY_USERNAME }}
@@ -69,9 +69,9 @@ jobs:
 
       - name: Build and push Ollama image
         if: steps.check_image.outputs.image_exists == 'false'
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: components/llm-servers/ollama/Containerfile
           push: true
-          tags: quay.io/${{ secrets.QUAY_USERNAME }}/ollama:${{ steps.get_version.outputs.OLLAMA_VERSION }}
+          tags: quay.io/takinosh/ollama-ubi9:${{ steps.get_version.outputs.OLLAMA_VERSION }}
