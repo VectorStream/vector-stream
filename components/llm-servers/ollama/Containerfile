@@ -27,7 +27,7 @@ RUN go build -trimpath .
 
 # Runtime stage
 ARG TARGET_PLATFORM=linux/amd64
-FROM --platform=$TARGET_PLATFORM registry.access.redhat.com/ubi9:latest
+FROM registry.access.redhat.com/ubi9:latest
 RUN yum -y update && \
     yum -y clean all --enablerepo='*' && \
     rm -rf /var/cache/dnf && \
