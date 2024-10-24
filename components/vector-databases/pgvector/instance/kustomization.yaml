@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - 00_namespace.yaml
+  - 01_db_secret.yaml
+  - 02_pvc.yaml
+  - 03_deployment.yaml
+  - 04_services.yaml
