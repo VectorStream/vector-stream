@@ -93,13 +93,13 @@ helm repo update
   - For Milvus Standalone:
   
     ```bash
-    oc apply -f milvus_manifest_standalone.yaml
+    oc apply -k components/vector-databases/milvus/overlays/standalone
     ```
 
   - For Milvus Cluster:
   
     ```bash
-    oc apply -f milvus_manifest_cluster.yaml
+    oc apply -k components/vector-databases/milvus/overlays/cluster
     ```
 
 - To deploy the management UI for Milvus, called Attu, apply the file [attu-deployment.yaml](attu-deployment.yaml):
