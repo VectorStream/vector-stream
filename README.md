@@ -6,4 +6,5 @@
 ```sh
 kustomize build clusters/overlays/rhoai-vector-stream-development | oc create -f -
 ```
-a
+
+
