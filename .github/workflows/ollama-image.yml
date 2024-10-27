@@ -68,6 +68,7 @@ jobs:
           password: ${{ secrets.QUAY_PASSWORD }}
 
       - name: Build and push Ollama image
+        continue-on-error: false
         if: steps.check_image.outputs.image_exists == 'false'
         uses: docker/build-push-action@v6
         with:
