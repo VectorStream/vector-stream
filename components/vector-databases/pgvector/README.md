@@ -21,6 +21,8 @@ A prebuilt image is available at [https://quay.io/repository/rh-aiservices-bu/po
 
 You can easily deploy a PostgreSQL+pgvector instance with the provided files (namespace is not mentioned in the files, so make sure you use them in the right one):
 
+`kustomize build components/vector-databases/pgvector/instance`
+
 - `01_db_secret.yaml`: the secret that will define the database name as well as the user name and password to connect to it.
 - `02_pvc.yaml`: an example of PVC needed to persist the database. If you don't have a default storage class you must add it.
 - `03_deployment.yaml`: deployment of PostgreSQL server.
