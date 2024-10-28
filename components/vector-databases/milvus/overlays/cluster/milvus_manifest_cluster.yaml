@@ -377,7 +377,6 @@ data:
     -XX:MaxDirectMemorySize=2048m
   PULSAR_MEM: |
     -Xms2048m -Xmx2048m
-  httpNumThreads: "100"
 # Source: milvus/charts/pulsar/templates/zookeeper-configmap.yaml
 #
 # Licensed to the Apache Software Foundation (ASF) under one
