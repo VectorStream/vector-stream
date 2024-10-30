@@ -1,9 +1,0 @@
-# ollama-deployment/overlays/multiple-models/kustomization.yaml
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-namespace: milvus-standalone
-
-resources:
-  - ../../base
-  - namespace.yaml

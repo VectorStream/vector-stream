@@ -1,134 +1,86 @@
-# Milvus
+Here's a README file incorporating the information from both provided links:
 
-[Milvus](https://milvus.io/) is Vector database built for scalable similarity search. It is "Open-source, highly scalable, and blazing fast".
+---
 
-As Milvus supports meany features, the easiest way to understand what it can do is to head to the relevant [documentation](https://milvus.io/docs/overview.md).
+# Milvus Deployment on OpenShift and Kubernetes
 
-Milvus also provides great documentation, starting with a full description of its architecture.
+This README provides guidance on deploying a Milvus cluster on OpenShift and Kubernetes using Milvus Operator.
 
-![Architecture](https://milvus.io/static/0bc2e74d0a1b20bbfb91bdbd03f77e5e/1263b/architecture_diagram.png)
+## Table of Contents
+- [Milvus Deployment on OpenShift and Kubernetes](#milvus-deployment-on-openshift-and-kubernetes)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Prerequisites](#prerequisites)
+  - [Deploying Milvus on OpenShift](#deploying-milvus-on-openshift)
+  - [Deploying Milvus on Kubernetes](#deploying-milvus-on-kubernetes)
+  - [Resources](#resources)
 
-## Container image
+## Introduction
 
-Milvus currently has a small shortcoming that prevents it to run natively on OpenShift. The fix is pretty straightforward and featured in the provided [Containerfile](Containerfile).
+Milvus is a highly scalable vector database optimized for similarity search workloads. Deploying Milvus on OpenShift and Kubernetes ensures efficient management and scalability of your data infrastructure.
 
-A [PR](https://github.com/milvus-io/milvus/pull/30775) has already been made to fix this issue and is now merged. It should be available in a coming release. Meanwhile, a compatible image is available [here](https://quay.io/repository/rh-data-services/milvus-openshift).
+## Prerequisites
 
-## Deployment
+- Access to a running OpenShift or Kubernetes cluster with necessary privileges.
+- Installed OpenShift Container Platform (for OpenShift deployments).
+- Installed Cert Manager for managing TLS certificates.
+- Helm installed (version 3.x is recommended).
+- Familiarity with Kubernetes Custom Resources.
 
-### Requirements
+## Deploying Milvus on OpenShift
 
-- Access to the OpenShift cluster.
-- A default StorageClass must be configured.
+Follow the detailed guide to deploy Milvus on OpenShift:
 
-### Deployment Options
+1. **Cert Manager Installation**: Install Cert Manager to manage certificates for Milvus Operator. Follow the [Cert Manager Installation Guide](https://cert-manager.io/docs/installation/).
 
-The following recipes will deploy a default installation of Milvus, either standalone or in cluster mode, with authentication enabled. However, many things can be modified in this configuration, through the provided `openshift-values.yaml` file.
+2. **Milvus Operator Manual Installation**:
+   - Add the Milvus Operator Helm repository:
+     ```bash
+     helm repo add milvus-operator https://zilliztech.github.io/milvus-operator/
+     helm repo update
+     ```
+   - Install the Milvus Operator:
+     ```bash
+     helm -n milvus-operator upgrade --install --create-namespace milvus-operator milvus-operator/milvus-operator
+     ```
+3. **Deploy Milvus**: Once the operator is installed, deploy the Milvus cluster using the appropriate YAML configuration file.
 
-- The default Milvus deployment leverages Minio to store logs and index files. This can be replaced by another S3 storage system
-- Default configuration uses Pulsar for managing logs of recent changes, outputting stream logs, and providing log subscriptions. This can be replaced by Kafka
+For full instructions, visit the [Deploy Milvus Cluster on OpenShift](https://milvus.io/docs/openshift.md) documentation.
 
-To modify those components, as well many other configuration parameters, please refer to the [configuration documentation](https://milvus.io/docs/deploy_s3.md) and modify the values file according to your needs.
+## Deploying Milvus on Kubernetes
 
-### Deployment procedure
+To deploy Milvus with the Milvus Operator on Kubernetes, follow these steps:
 
-Milvus can be deployed in Standalone or Cluster mode. Cluster mode, leveraging Pulsar, etcd and Minio for data persistency, will bring redundancy, as well as easy scale up and down of the different components.
+1. **Milvus Operator Manual Installation**:
+   - With Helm:
+     ```bash
+     helm install milvus-operator -n milvus-operator --create-namespace https://github.com/zilliztech/milvus-operator/releases/download/v1.0.1/milvus-operator-1.0.1.tgz
+     ```
+   - With kubectl:
+     ```bash
+     kubectl apply -f https://raw.githubusercontent.com/zilliztech/milvus-operator/main/deploy/manifests/deployment.yaml
+     ```
 
-Although Milvus features an operator to easily deploy it in a Kubernetes environment, this method has not been tested yet, while waiting for the different corrections to be made to the deployment code for OpenShift specificities.
+2. **Deploy Milvus Cluster**:
+   - Deploy using a default configuration:
+     ```bash
+     kubectl apply -f https://raw.githubusercontent.com/zilliztech/milvus-operator/main/config/samples/milvus_cluster_default.yaml
+     ```
 
-Instead, this deployment method is based on the [Offline installation](https://milvus.io/docs/install_offline-helm.md) that purely rely on Helm Charts.
+3. **Deploy Cluster using kustomize**:
+   - Clone the Milvus Operator repository:
+     ```bash
+     kustomize build components/vector-databases/milvus/overlays/cluster | oc create -f - 
+     ```
 
-- Log into your OpenShift cluster, and create a new project to host your Milvus installation:
+For complete instructions, refer to the [Install Milvus Cluster with Milvus Operator](https://milvus.io/docs/install_cluster-milvusoperator.md#Deploy-Milvus) guide.
 
-```bash
-oc new-project milvus
-```
+## Resources
 
-- Add and update Milvus Helm repository locally:
+- [Milvus Documentation](https://milvus.io/docs/)
+- [Milvus GitHub Repository](https://github.com/milvus-io/milvus)
+- [Milvus Operator GitHub Repository](https://github.com/zilliztech/milvus-operator)
 
-```bash
-helm repo add milvus https://zilliztech.github.io/milvus-helm/
-helm repo update
-```
+--- 
 
-- Fetch the file [`openshift-values.yaml`](openshift-values.yaml) from this repo. This file is really important as it sets specific values for OpenShift compatibility. You can also modify some of the values in this file to adapt the deployment to your requirements, notably modify the Minio admin user and password.
-
-    ```bash
-    wget https://raw.githubusercontent.com/rh-aiservices-bu/llm-on-openshift/main/vector-databases/milvus/openshift-values.yaml
-    ```
-
-- Create the manifest:
-  - For Milvus standalone:
-
-    ```bash
-    helm template -f openshift-values.yaml vectordb --set cluster.enabled=false --set etcd.replicaCount=1 --set minio.mode=standalone --set pulsar.enabled=false milvus/milvus > components/vector-databases/milvus/overlays/standalone/kustomization.yaml
-    ```
-
-  - For Milvus cluster:
-
-    ```bash
-    helm template -f openshift-values.yaml vectordb milvus/milvus > components/vector-databases/milvus/overlays/cluster/milvus_manifest_cluster.yaml
-    ```
-
-- **VERY IMPORTANT**: you must patch the generated manifest, as some settings are incompatible with OpenShift. Those commands are using the **[yq tool](https://mikefarah.gitbook.io/yq/)** (beware, the real one, not the Python version):
-  - For Milvus Standalone:
-  
-    ```bash
-    yq '(select(.kind == "StatefulSet" and .metadata.name == "vectordb-etcd") | .spec.template.spec.securityContext) = {}' -i milvus_manifest_standalone.yaml
-    yq '(select(.kind == "StatefulSet" and .metadata.name == "vectordb-etcd") | .spec.template.spec.containers[0].securityContext) = {"capabilities": {"drop": ["ALL"]}, "runAsNonRoot": true, "allowPrivilegeEscalation": false}' -i milvus_manifest_standalone.yaml
-    yq '(select(.kind == "Deployment" and .metadata.name == "vectordb-minio") | .spec.template.spec.containers[0].securityContext) = {"capabilities": {"drop": ["ALL"]}, "runAsNonRoot": true, "allowPrivilegeEscalation": false, "seccompProfile": {"type": "RuntimeDefault"} }' -i milvus_manifest_standalone.yaml
-    yq '(select(.kind == "Deployment" and .metadata.name == "vectordb-minio") | .spec.template.spec.securityContext) = {}' -i milvus_manifest_standalone.yaml
-   ```
-
-  - For Milvus Cluster:
-  
-    ```bash
-    yq '(select(.kind == "StatefulSet" and .metadata.name == "vectordb-etcd") | .spec.template.spec.securityContext) = {}' -i milvus_manifest_cluster.yaml
-    yq '(select(.kind == "StatefulSet" and .metadata.name == "vectordb-etcd") | .spec.template.spec.containers[0].securityContext) = {"capabilities": {"drop": ["ALL"]}, "runAsNonRoot": true, "allowPrivilegeEscalation": false}' -i milvus_manifest_cluster.yaml
-    yq '(select(.kind == "StatefulSet" and .metadata.name == "vectordb-minio") | .spec.template.spec.securityContext) = {"capabilities": {"drop": ["ALL"]}, "runAsNonRoot": true, "allowPrivilegeEscalation": false}' -i milvus_manifest_cluster.yaml
-    ```
-
-- Deploy Milvus (eventually change the name of the manifest)!
-
-  - For Milvus Standalone:
-  
-    ```bash
-    oc apply -k components/vector-databases/milvus/overlays/standalone
-    ```
-
-  - For Milvus Cluster:
-  
-    ```bash
-    oc apply -k components/vector-databases/milvus/overlays/cluster
-    ```
-
-- To deploy the management UI for Milvus, called Attu, apply the file [attu-deployment.yaml](attu-deployment.yaml):
-
-```bash
-oc apply -f https://raw.githubusercontent.com/rh-aiservices-bu/llm-on-openshift/main/vector-databases/milvus/attu-deployment.yaml
-```
-
-NOTE: Attu deployment could have been done through the Helm chart, but this would not properly create the access Route.
-
-Milvus is now deployed, with authentication enabled. The default and only admin user is `root`, with the default password `Milvus`. Please see the following section to modify this root access and create the necessary users and roles.
-
-## Day-2 operations
-
-Milvus implements a full RBAC system to control access to its databases and collections. It is recommended to:
-
-- Change the default password
-- Create collections
-- Create users and roles to give read/write or read access to the different collections
-
-All of this can be done either using the PyMilvus library, or the Attu UI deployed in the last step.
-
-Milvus features an [awesome documentation](https://milvus.io/docs), detailing all the configuration, maintenance, and operations procedure. This is a must-read to grasp all aspects of its architecture and usage.
-
-## Usage
-
-Several example notebooks are available to show how to use Milvus:
-
-- Collection creation and document ingestion using Langchain: [Langchain-Milvus-Ingest.ipynb](../../examples/notebooks/langchain/Langchain-Milvus-Ingest.ipynb)
-- Collection creation and document ingestion using Langchain with Nomic AI Embeddings: [Langchain-Milvus-Ingest-nomic.ipynb](../../examples/notebooks/langchain/Langchain-Milvus-Ingest-nomic.ipynb)
-- Query a collection using Langchain: [Langchain-Milvus-Query.ipynb](../../examples/notebooks/langchain/Langchain-Milvus-Query.ipynb)
-- Query a collection using Langchain with Nomic AI Embeddings: [Langchain-Milvus-Query-nomic.ipynb](../../examples/notebooks/langchain/Langchain-Milvus-Query-nomic.ipynb)
+This README provides a consolidated overview of deploying Milvus on OpenShift and Kubernetes environments. For detailed steps and troubleshooting, please visit the linked documentation pages.
