@@ -40,7 +40,7 @@ spec:
           protocol: TCP
         env:
         - name: MILVUS_URL
-          value: "vectordb-milvus:19530"
+          value: "vectordb-milvus.milvus-standalone.svc.cluster.local:19530"
 ---
 kind: Route
 apiVersion: route.openshift.io/v1

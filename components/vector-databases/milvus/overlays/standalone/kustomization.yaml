@@ -7,4 +7,3 @@ namespace: milvus-standalone
 resources:
   - ../../base
   - namespace.yaml
-  - milvus_manifest_standalone.yaml
