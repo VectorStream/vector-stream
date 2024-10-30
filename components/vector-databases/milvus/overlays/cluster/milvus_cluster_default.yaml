@@ -5,6 +5,7 @@ metadata:
   name: milvus-cluster
   labels:
     app: milvus
+  namespace: milvus-operator
 spec:
   mode: cluster
   dependencies: {}

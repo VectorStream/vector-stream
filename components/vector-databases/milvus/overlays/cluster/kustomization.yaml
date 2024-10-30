@@ -3,6 +3,8 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - serviceaccount.yaml
+  - cluster-rb.yaml
   - milvus-operator.yaml
   - milvus_cluster_default.yaml
 #patchesStrategicMerge:

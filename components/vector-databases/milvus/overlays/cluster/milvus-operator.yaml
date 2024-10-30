@@ -1,17 +1,4 @@
 ---
-# Source: milvus-operator/templates/checker_serviceaccount.yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: "milvus-operator-checker"
-  namespace: "milvus-operator"
-  labels:
-    helm.sh/chart: milvus-operator-1.1.1
-    app.kubernetes.io/name: milvus-operator
-    app.kubernetes.io/instance: milvus-operator
-    app.kubernetes.io/version: "1.1.1"
-    app.kubernetes.io/managed-by: Helm
----
 # Source: milvus-operator/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
