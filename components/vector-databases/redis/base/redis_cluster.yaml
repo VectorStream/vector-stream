@@ -1,0 +1,17 @@
+kind: RedisEnterpriseCluster
+apiVersion: app.redislabs.com/v1
+metadata:
+  name: rec
+  namespace: redis-rag
+spec:
+  nodes: 3
+  persistentSpec:
+    enabled: true
+  uiServiceType: ClusterIP
+  bootstrapperImageSpec:
+    repository: registry.connect.redhat.com/redislabs/redis-enterprise-operator
+  redisEnterpriseServicesRiggerImageSpec:
+    repository: registry.connect.redhat.com/redislabs/services-manager
+  redisEnterpriseImageSpec:
+    imagePullPolicy: IfNotPresent
+    repository: registry.connect.redhat.com/redislabs/redis-enterprise

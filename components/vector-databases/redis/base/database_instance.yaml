@@ -1,0 +1,8 @@
+apiVersion: app.redislabs.com/v1alpha1
+kind: RedisEnterpriseDatabase
+metadata:
+  name: redb
+  namespace: redis-rag
+spec:
+  memorySize: 4B
+  persistence: snapshotEvery12Hour

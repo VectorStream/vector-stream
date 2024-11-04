@@ -2,6 +2,12 @@
 
 [Redis](https://redis.io/) is an open source, in-memory data store that can be used as a Vector Store for your embeddings in a Retrieval Augmented Generation scenario.
 
+## Deplpoy using Kustomize 
+```
+oc create -f components/vector-databases/redis/base/namespace.yaml
+oc apply -k components/vector-databases/redis/overlays/default
+```
+
 ## Pre-requisites
 
 - Create the project/namespace where you want to deploy your Redis cluster.
@@ -14,8 +20,8 @@ oc apply -f scc.yaml
 - Provide the operator permissions for Redis Enterprise Operator and Cluster pods (replace `myproject` with the name of the project you created, and `rec` if you don't want to use the default name for the cluster when you will create it):
 
 ```bash
- oc adm policy add-scc-to-user redis-enterprise-scc system:serviceaccount:myproject:redis-enterprise-operator
- oc adm policy add-scc-to-user redis-enterprise-scc system:serviceaccount:myproject:rec
+ oc adm policy add-scc-to-user redis-enterprise-scc system:serviceaccount:redis-rag:redis-enterprise-operator
+ oc adm policy add-scc-to-user redis-enterprise-scc system:serviceaccount:redis-rag:rec
 ```
 
 Note: repeat the previous step for every cluster you want to create or operator you want to deploy in different namespaces.
@@ -85,7 +91,7 @@ spec:
   memorySize: 4GB
   modulesList:
     - name: search
-      version: 2.8.4
+      version: 7.2.4
   persistence: snapshotEvery12Hour
   replication: true
   tlsMode: disabled
