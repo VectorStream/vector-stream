@@ -1,6 +1,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+namespace: "milvus-operator"
+
 resources:
   - ../../base
   - serviceaccount.yaml
@@ -9,3 +11,4 @@ resources:
   - milvus_cluster_default.yaml
 #patchesStrategicMerge:
 #  - patch-deployment.yaml
+# https://github.com/zilliztech/milvus-operator/blob/main/config/samples/cluster_demo.yaml

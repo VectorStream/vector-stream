@@ -20,9 +20,3 @@ subjects:
 - kind: ServiceAccount
   name: milvus-cluster-pulsar-broker-acct
   namespace: milvus-operator
-
-
-
-
-
-  

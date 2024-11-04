@@ -1,13 +1,9 @@
-Here's a README file incorporating the information from both provided links:
-
----
-
-# Milvus Deployment on OpenShift and Kubernetes
+# Milvus Deployment on OpenShift and Kubernetes - WIP
 
 This README provides guidance on deploying a Milvus cluster on OpenShift and Kubernetes using Milvus Operator.
 
 ## Table of Contents
-- [Milvus Deployment on OpenShift and Kubernetes](#milvus-deployment-on-openshift-and-kubernetes)
+- [Milvus Deployment on OpenShift and Kubernetes - WIP](#milvus-deployment-on-openshift-and-kubernetes---wip)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Prerequisites](#prerequisites)
