@@ -11,7 +11,7 @@ Current channel overlays include:
 If you have cloned the `gitops-catalog` repository, you can install the AMQ Streams operator based on the overlay of your choice by running from the root `gitops-catalog` directory
 
 ```
-oc apply -k amq-streams-operator/operator/overlays/<channel>
+oc apply -k components/operators/amq-streams/operator/overlays/stable
 ```
 
 Or, without cloning:

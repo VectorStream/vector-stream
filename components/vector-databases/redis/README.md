@@ -5,7 +5,9 @@
 ## Deplpoy using Kustomize 
 ```
 oc create -f components/vector-databases/redis/base/namespace.yaml
-oc apply -k components/vector-databases/redis/overlays/default
+oc apply -k components/vector-databases/redis/operators/overlays/default
+oc get pods -n redis-rag
+oc apply -k components/vector-databases/redis/instance/overlays/default
 ```
 
 ## Pre-requisites
