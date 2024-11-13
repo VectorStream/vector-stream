@@ -1,10 +1,9 @@
 apiVersion: app.redislabs.com/v1alpha1
 kind: RedisEnterpriseDatabase
 metadata:
-  name: redb
+  name: redb-rag-instance
   namespace: redis-rag
 spec:
-  databaseSecretName: redb-rag-instance
   defaultUser: true
   memorySize: 300MB
   modulesList:
