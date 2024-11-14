@@ -4,10 +4,15 @@
 
 ## Deplpoy using Kustomize 
 ```
-oc create -f components/vector-databases/redis/base/namespace.yaml
-oc apply -k components/vector-databases/redis/operators/overlays/default
-oc get pods -n redis-rag
-oc apply -k components/vector-databases/redis/instance/overlays/default
+$ oc create -f components/vector-databases/redis/base/namespace.yaml
+$ oc apply -k components/vector-databases/redis/operators/overlays/default
+$ oc get pods -n redis-rag -w                                                             03:47:53 PM
+NAME                                        READY   STATUS    RESTARTS   AGE
+rec-0                                       2/2     Running   0          2m38s
+rec-1                                       2/2     Running   0          2m1s
+rec-2                                       2/2     Running   0          63s
+redis-enterprise-operator-9c9c4b89b-5fbrv   2/2     Running   0          2m43s
+$ oc apply -k components/vector-databases/redis/instance/overlays/default
 ```
 
 ## Pre-requisites
