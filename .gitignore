@@ -3,3 +3,5 @@ aider-env/bin/activate
 aider_setup.sh
 .aider*
 .env
+quickscript.sh
+aider_components.txt
