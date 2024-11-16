@@ -9,3 +9,4 @@ resources:
   - operator_group.yaml
   - subscription.yaml
   - redis_cluster.yaml
+  - route.yaml

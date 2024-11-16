@@ -1,0 +1,19 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: redis-ui
+  namespace: redis-rag
+  labels:
+    app: redis-enterprise
+    redis.io/cluster: rec
+spec:
+  to:
+    kind: Service
+    name: rec-ui
+    weight: 100
+  port:
+    targetPort: ui
+  tls:
+    termination: passthrough
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
