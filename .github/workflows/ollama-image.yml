@@ -3,9 +3,9 @@ name: Build and Push Ollama Image
 on:
   #schedule:
   #  - cron: '0 0 * * 0'  # Run every Sunday at midnight
-  push:
-    branches:
-      - main
+  #push:
+  #  branches:
+  #    - main
   pull_request:
     branches:
       - main

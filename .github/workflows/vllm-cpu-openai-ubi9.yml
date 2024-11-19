@@ -23,10 +23,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Get latest Ollama release version
+      - name: Get latest VLLM CPU release version
         id: get_version
         run: |
-          latest_release=$(curl -s https://api.github.com/repos/ollama/ollama/releases/latest | jq -r .tag_name)
+          latest_release=$(curl -s https://api.github.com/repos/RHRolun/vllm/releases/latest | jq -r .tag_name)
           echo "::set-output name=VLLM_CPU_VERSION::$latest_release"
 
       - name: Check if image already exists
@@ -48,14 +48,14 @@ jobs:
       - name: Update Containerfile with latest version
         if: steps.check_image.outputs.image_exists == 'false'
         run: |
-          sed -i "s/ARG VLLM_CPU_VERSION=v[0-9.]*/ARG VLLM_CPU_VERSION=${{ steps.get_version.outputs.VLLM_CPU_VERSION }}/" components/llm-servers/ollama/Containerfile
+          sed -i "s/ARG VLLM_CPU_VERSION=v[0-9.]*/ARG VLLM_CPU_VERSION=${{ steps.get_version.outputs.VLLM_CPU_VERSION }}/" components/llm-servers/vllm/cpu/Containerfile
 
       - name: Commit updated Containerfile
         if: steps.check_image.outputs.image_exists == 'false'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add components/llm-servers/ollama/Containerfile
+          git add components/llm-servers/vllm/cpu/Containerfile
           git commit -m "Update VLLM_CPU_VERSION to ${{ steps.get_version.outputs.VLLM_CPU_VERSION }}"
           git push
 
@@ -67,12 +67,12 @@ jobs:
           username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_PASSWORD }}
 
-      - name: Build and push Ollama image
+      - name: Build and push VLLM CPU image
         continue-on-error: false
         if: steps.check_image.outputs.image_exists == 'false'
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: components/llm-servers/ollama/Containerfile
+          file: components/llm-servers/vllm/cpu/Containerfile
           push: true
-          tags: quay.io/takinosh/ollama-ubi9:${{ steps.get_version.outputs.VLLM_CPU_VERSION }}
+          tags: quay.io/takinosh/vllm-cpu-openai-ubi9:${{ steps.get_version.outputs.VLLM_CPU_VERSION }}
