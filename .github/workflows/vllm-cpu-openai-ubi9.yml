@@ -1,4 +1,4 @@
-name: Build and Push Ollama Image
+name: Build and Push VLLM CPU Build Image
 
 on:
   #schedule:
