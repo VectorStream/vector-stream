@@ -1,0 +1,78 @@
+name: Build and Push Ollama Image
+
+on:
+  #schedule:
+  #  - cron: '0 0 * * 0'  # Run every Sunday at midnight
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Get latest Ollama release version
+        id: get_version
+        run: |
+          latest_release=$(curl -s https://api.github.com/repos/ollama/ollama/releases/latest | jq -r .tag_name)
+          echo "::set-output name=VLLM_CPU_VERSION::$latest_release"
+
+      - name: Check if image already exists
+        id: check_image
+        run: |
+          IMAGE_EXISTS=$(curl -s "https://quay.io/api/v1/repository/takinosh/vllm-cpu-openai-ubi9/tag/?specificTag=${{ steps.get_version.outputs.VLLM_CPU_VERSION }}" | jq -r '.tags | length')
+          if [ "$IMAGE_EXISTS" -gt 0 ]; then
+            echo "::set-output name=image_exists::true"
+          else
+            echo "::set-output name=image_exists::false"
+          fi
+
+      - name: Exit early if image already exists
+        if: steps.check_image.outputs.image_exists == 'true'
+        run: |
+          echo "Image for version ${{ steps.get_version.outputs.VLLM_CPU_VERSION }} already exists. Exiting early."
+          exit 0
+
+      - name: Update Containerfile with latest version
+        if: steps.check_image.outputs.image_exists == 'false'
+        run: |
+          sed -i "s/ARG VLLM_CPU_VERSION=v[0-9.]*/ARG VLLM_CPU_VERSION=${{ steps.get_version.outputs.VLLM_CPU_VERSION }}/" components/llm-servers/ollama/Containerfile
+
+      - name: Commit updated Containerfile
+        if: steps.check_image.outputs.image_exists == 'false'
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add components/llm-servers/ollama/Containerfile
+          git commit -m "Update VLLM_CPU_VERSION to ${{ steps.get_version.outputs.VLLM_CPU_VERSION }}"
+          git push
+
+      - name: Log in to Quay.io
+        if: steps.check_image.outputs.image_exists == 'false'
+        uses: docker/login-action@v3
+        with:
+          registry: quay.io
+          username: ${{ secrets.QUAY_USERNAME }}
+          password: ${{ secrets.QUAY_PASSWORD }}
+
+      - name: Build and push Ollama image
+        continue-on-error: false
+        if: steps.check_image.outputs.image_exists == 'false'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: components/llm-servers/ollama/Containerfile
+          push: true
+          tags: quay.io/takinosh/ollama-ubi9:${{ steps.get_version.outputs.VLLM_CPU_VERSION }}
