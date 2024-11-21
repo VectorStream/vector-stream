@@ -18,20 +18,20 @@ Below you have a few options for how to deploy.
 
 ### Automated Deployment
 
-- Use the OpenShift GitOps/ArgoCD Application definition at `gitops/vllm-app.yaml`
 
 ### Manual Deployment using Kustomize
 
 After logging in to OpenShift, run the following commands:
 
 ```bash
-$ oc new-project vllm
-$ kustomize build https://github.com/rh-aiservices-bu/llm-on-openshift.git/llm-servers/vllm/cpu/gitops | oc apply -f -
+$ kustomize build components/llm-servers/vllm/cpu/gitops/overlays | oc apply -f -
+# update HUGGING_FACE_HUB_TOKEN with your token
+$  ./components/llm-servers/vllm/cpu/configure-token.sh  HUGGING_FACE_HUB_TOKEN
 ```
 
 You can also replace the github.com URL in the kustomize command with a local path instead, if this repository has been locally cloned.
 
-### Manual Deployment 
+### Manual Deployment
 
 Using the contents of the [gitops folder](gitops), perform the following steps:
 

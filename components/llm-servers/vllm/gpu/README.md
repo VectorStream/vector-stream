@@ -23,9 +23,11 @@ The default installation deploys the [Mistral-7B-Instruct-v0.2](https://huggingf
 After logging in to OpenShift, run the following commands:
 
 ```bash
-$ oc new-project vllm
-$ kustomize build https://github.com/rh-aiservices-bu/llm-on-openshift.git/llm-servers/vllm/gpu/gitops | oc apply -f -
+$ kustomize build components/llm-servers/vllm/gpu/gitops/overlays | oc apply -f -
+# update HUGGING_FACE_HUB_TOKEN with your token
+$  ./components/llm-servers/vllm/gpu/configure-token.sh  HUGGING_FACE_HUB_TOKEN
 ```
+
 
 You can also replace the github.com URL in the kustomize command with a local path instead, if this repository has been locally cloned.
 
