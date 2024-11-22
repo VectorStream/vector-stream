@@ -3,5 +3,4 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
-  - milvus-operator-certificate.yaml
   - attu-deployment.yaml

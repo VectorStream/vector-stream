@@ -23,6 +23,24 @@ Milvus is a highly scalable vector database optimized for similarity search work
 - Helm installed (version 3.x is recommended).
 - Familiarity with Kubernetes Custom Resources.
 
+## Deploying using kustomize on OpenShift
+
+### Log in to OpenShift
+```bash
+oc login -u kubeadmin -p <password> https://api.<cluster_name>.<aws_region>.ocp.rhoai.io:6443
+```
+
+### Standalone Deployment
+```bash 
+ oc create -k components/vector-databases/milvus/overlays/standalone
+```
+
+
+### Cluster Deployment
+```bash
+oc create -k components/vector-databases/milvus/overlays/cluster
+```
+
 ## Deploying Milvus on OpenShift
 
 Follow the detailed guide to deploy Milvus on OpenShift:
@@ -62,12 +80,9 @@ To deploy Milvus with the Milvus Operator on Kubernetes, follow these steps:
      ```bash
      kubectl apply -f https://raw.githubusercontent.com/zilliztech/milvus-operator/main/config/samples/milvus_cluster_default.yaml
      ```
+NOTE: Attu deployment could have been done through the Helm chart, but this would not properly create the access Route.
 
-3. **Deploy Cluster using kustomize**:
-   - Clone the Milvus Operator repository:
-     ```bash
-     kustomize build components/vector-databases/milvus/overlays/cluster | oc create -f - 
-     ```
+Milvus is now deployed, with authentication enabled. The default and only admin user is `root`, with the default password `Milvus`. Please see the following section to modify this root access and create the necessary users and roles.
 
 For complete instructions, refer to the [Install Milvus Cluster with Milvus Operator](https://milvus.io/docs/install_cluster-milvusoperator.md#Deploy-Milvus) guide.
 

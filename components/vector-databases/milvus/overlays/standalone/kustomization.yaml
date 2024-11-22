@@ -5,4 +5,4 @@ namespace: "milvus"
 
 resources:
   - ../../base
-  - milvus_manifest_cluster.yaml
+  - milvus_manifest_standalone.yaml
