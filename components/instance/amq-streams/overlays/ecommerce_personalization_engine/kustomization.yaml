@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ecommerce-personalization-engine
+
+resources:
+  - ../../base
+  - kafka-cluster.yaml
+  - kafdrop-dc.yaml
+  - kafdrop-service.yaml
+  - kafdrop-route.yaml
+
+patches:
+  - target:
+      kind: Kafka
+      name: kafka-cluster
+    patch: |-
+      - op: replace
+        path: /metadata/namespace
+        value: ecommerce-personalization-engine
+      - op: replace
+        path: /metadata/name
+        value: kafka
+  - target:
+      kind: Namespace
+      name: my-project
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: ecommerce-personalization-engine

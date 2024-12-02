@@ -1,0 +1,14 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: ecommerce-personalization-engine
+  namespace: ecommerce-personalization-engine
+  labels:
+    app: ecommerce-personalization-engine
+    app.kubernetes.io/component: ecommerce-personalization-engine
+    app.kubernetes.io/instance: ecommerce-personalization-engine
+    app.kubernetes.io/name: ecommerce-personalization-engine
+    app.kubernetes.io/part-of: ecommerce-personalization-engine
+spec:
+  lookupPolicy:
+    local: false

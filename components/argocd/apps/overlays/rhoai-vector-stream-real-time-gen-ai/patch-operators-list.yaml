@@ -6,8 +6,3 @@
       values:
         name: amq-streams-operator
         path: components/operators/amq-streams/operator/overlays/stable
-    - cluster: local
-      url: https://kubernetes.default.svc
-      values:
-        name: ollama-server
-        path: components/llm-servers/ollama/gitops/overlays
