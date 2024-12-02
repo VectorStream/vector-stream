@@ -1,0 +1,54 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: financial-fraud-detection-system
+  namespace: financial-fraud-detection-system
+  labels:
+    app: financial-fraud-detection-system
+    app.kubernetes.io/component: financial-fraud-detection-system
+    app.kubernetes.io/instance: financial-fraud-detection-system
+    app.kubernetes.io/name: financial-fraud-detection-system
+    app.kubernetes.io/part-of: financial-fraud-detection-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: financial-fraud-detection-system
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: financial-fraud-detection-system
+        deployment: financial-fraud-detection-system
+    spec:
+      containers:
+        - name: financial-fraud-detection-system
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/financial-fraud-detection-system/financial-fraud-detection-system:latest
+          env:
+            - name: KAFKA_BROKER
+              value: >-
+                kafka-kafka-bootstrap.financial-fraud-detection-system.svc.cluster.local:9092
+            - name: TRANSACTION_INTERVAL
+              value: "10"
+            - name: FRAUD_PERCENTAGE
+              value: "0.3"
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

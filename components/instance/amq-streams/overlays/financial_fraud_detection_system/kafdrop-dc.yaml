@@ -1,0 +1,52 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: ecommerce-kafka-cluster-kafdrop
+  namespace: ecommerce-personalization-engine
+  labels:
+    app: kafdrop
+  annotations:
+    app.openshift.io/vcs-uri: 'https://github.com/obsidiandynamics/kafdrop'
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      name: kafdrop
+  template:
+    metadata:
+      name: kafdrop
+      labels:
+        name: kafdrop
+    spec:
+      containers:
+        - name: kafdrop
+          env:
+            - name: KAFKA_BROKERCONNECT
+              value: "kafka-kafka-bootstrap.financial-fraud-detection-system.svc.cluster.local:9092"
+          imagePullPolicy: IfNotPresent
+          image: obsidiandynamics/kafdrop
+          ports:
+            - containerPort: 9000
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            httpGet:
+              path: /actuator/health
+              port: 9000
+              scheme: HTTP
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            httpGet:
+              path: /actuator/health
+              port: 9000
+              scheme: HTTP
+  triggers:
+    - type: ConfigChange

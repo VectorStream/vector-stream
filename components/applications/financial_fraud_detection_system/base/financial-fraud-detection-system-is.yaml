@@ -1,0 +1,14 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: financial-fraud-detection-system
+  namespace: financial-fraud-detection-system
+  labels:
+    app: financial-fraud-detection-system
+    app.kubernetes.io/component: financial-fraud-detection-system
+    app.kubernetes.io/instance: financial-fraud-detection-system
+    app.kubernetes.io/name: financial-fraud-detection-system
+    app.kubernetes.io/part-of: financial-fraud-detection-system
+spec:
+  lookupPolicy:
+    local: false

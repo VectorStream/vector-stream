@@ -1,0 +1,21 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: financial-fraud-detection-system
+  namespace: financial-fraud-detection-system
+  labels:
+    deployment: financial-fraud-detection-system
+spec:
+  ipFamilies:
+    - IPv4
+  ports:
+    - name: 8000-tcp
+      protocol: TCP
+      port: 8000
+      targetPort: 8000
+  internalTrafficPolicy: Cluster
+  type: ClusterIP
+  ipFamilyPolicy: SingleStack
+  sessionAffinity: None
+  selector:
+    deployment: financial-fraud-detection-system
