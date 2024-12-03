@@ -1,0 +1,40 @@
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: smart-city-traffic-management
+  namespace: smart-city-traffic-management
+  labels:
+    app: smart-city-traffic-management
+    app.kubernetes.io/component: smart-city-traffic-management
+    app.kubernetes.io/instance: smart-city-traffic-management
+    app.kubernetes.io/name: smart-city-traffic-management
+    app.kubernetes.io/part-of: smart-city-traffic-management
+spec:
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'smart-city-traffic-management:latest'
+  resources: {}
+  successfulBuildsHistoryLimit: 5
+  failedBuildsHistoryLimit: 5
+  strategy:
+    type: Docker
+    dockerStrategy: {}
+  postCommit: {}
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/VectorStream/vector-stream-utils.git'
+    contextDir: smart_city_traffic_management
+  triggers:
+    - type: Generic
+      generic:
+        secretReference:
+          name: smart-city-traffic-management-generic-webhook-secret
+    - type: GitHub
+      github:
+        secretReference:
+          name: smart-city-traffic-management-github-webhook-secret
+    - type: ConfigChange
+  runPolicy: Serial

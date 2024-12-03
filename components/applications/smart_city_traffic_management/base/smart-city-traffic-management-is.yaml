@@ -1,0 +1,14 @@
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+metadata:
+  name: smart-city-traffic-management
+  namespace: smart-city-traffic-management
+  labels:
+    app: smart-city-traffic-management
+    app.kubernetes.io/component: smart-city-traffic-management
+    app.kubernetes.io/instance: smart-city-traffic-management
+    app.kubernetes.io/name: smart-city-traffic-management
+    app.kubernetes.io/part-of: smart-city-traffic-management
+spec:
+  lookupPolicy:
+    local: false

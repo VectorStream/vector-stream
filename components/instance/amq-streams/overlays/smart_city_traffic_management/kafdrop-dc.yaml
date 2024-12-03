@@ -2,7 +2,7 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: kafka-cluster-kafdrop
-  namespace: financial-fraud-detection-system
+  namespace: smart-city-traffic-management
   labels:
     app: kafdrop
   annotations:
@@ -24,7 +24,7 @@ spec:
         - name: kafdrop
           env:
             - name: KAFKA_BROKERCONNECT
-              value: "kafka-kafka-bootstrap.financial-fraud-detection-system.svc.cluster.local:9092"
+              value: "kafka-kafka-bootstrap.smart-city-traffic-management.svc.cluster.local:9092"
           imagePullPolicy: IfNotPresent
           image: obsidiandynamics/kafdrop
           ports:

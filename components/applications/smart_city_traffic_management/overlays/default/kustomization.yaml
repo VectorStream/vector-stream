@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+  - smart-city-traffic-management-dc.yaml
+  - smart-city-traffic-management-svc.yaml
